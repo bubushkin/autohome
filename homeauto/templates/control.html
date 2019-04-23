@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Home Security Automation{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Current Status of deployed Modules</h2>
+</div>
+
+<div id="err_dialog" class="alert alert-warning">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+  <p id="err_message"></p>
+</div>
+
+<div id="succ_dialog" class="alert alert-success"">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <p id="succ_message"></p>
+</div>
+
+
+<div>
+        		<div id="grid">
+        			<table id="ratesGrid" class="table table-striped table-hover">
+        				        <thead>  
+          							<tr>
+          								<th>Module</th>  
+            							<th>Status</th>
+            							<th>Registration Date</th>  
+            							<th>Action</th>
+          							</tr>
+        						</thead> 
+								 <tbody>
+								 {% if modules is not none %}
+								 	{% for vdx in modules %}
+								        <tr>
+								        	<td>{{  vdx['device_name'] }}</td>
+								        	<td id="status_{{ vdx.get('device_id') }}">{{  vdx['status_name'] }}</td>
+								        	<td>{{  vdx['registration_timestamp'] }}</td>
+								        	{% if vdx['status_name'] == 'ON' %}
+								        		<td> <button id="btnactivate_{{ vdx.get('device_id') }}" type="button" onclick="action_device(this.id, 0)" class="btn btn-danger">POWER OFF</button> </td>
+								        	{% else %}
+								        		 <td> <button id="btnactivate_{{ vdx.get('device_id') }}" type="button" onclick="action_device(this.id, 1)" class="btn btn-success">POWER ON</button> </td>
+								        	{% endif %}
+								        </tr>
+								     {% endfor %}
+								 {% endif %}								        
+								 </tbody>        						 
+        			</table>
+        		</div>
+</div>
+
+<script>
+$("#err_dialog").hide();
+$("#succ_dialog").hide();
+
+function action_device(button_id, action){
+	console.time("action_device");
+
+	var curr_id = null;
+	
+	if(typeof(button_id) == "string"){
+		curr_id = button_id.split('_')[0x1];
+	} else{
+		curr_id = button_id;
+	}
+
+	$.post("{{ url_for('main.action') }}", { device_id: curr_id, action: action},
+        function(data,status){
+        	if(status == "success"){
+        		if(data.error == 200){
+        			var elem = $("#" + button_id)[0];
+	        		if(status){
+	        			if(action == 0x0){
+		        			$("#status_" + curr_id).text("OFF");
+		        			$("#" + button_id).text("POWER ON");
+		        			$("#" + button_id).attr('class', 'btn btn-success');
+		        			$("#" + button_id).attr('onclick', 'action_device(this.id, 1)');
+	        			} else {
+		        			$("#status_" + curr_id).text("ON");
+		        			$("#" + button_id).text("POWER OFF");
+		        			$("#" + button_id).attr('class', 'btn btn-danger');
+		        			$("#" + button_id).attr('onclick', 'action_device(this.id, 0)');
+	        			}
+	        		} 
+        		} else{
+	        		$("#err_dialog").show();
+        		}
+        	}
+        });
+	console.timeEnd("action_device");
+
+}
+
+</script>
+
+{% endblock %}

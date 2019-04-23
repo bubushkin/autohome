@@ -1,0 +1,32 @@
+{
+	"gpio": [
+			{
+				"device_name": "PIR_Frontdoor",
+				"device_id": 7,
+				"device_io": 0,
+				"device_couple": null
+			},{
+				"device_name": "PIR_Garage",
+				"device_id": 9,
+				"device_io": 0,
+				"device_couple": null
+			},{     
+                                "device_name": "FAN_Basement",
+                                "device_id": 3,
+                                "device_io": 0,
+				"device_couple": null
+                        }
+	],
+	"csi":  {
+			"device_name": "CAMERA_Frondoor",
+                        "device_id": 11,
+                        "device_io": 1,
+			"device_couple": 7
+               },
+
+	"dsi":  {
+			"device_name": "DISPLAY_Main",
+                        "device_id": 12,
+                        "device_io": 0
+               }
+}
