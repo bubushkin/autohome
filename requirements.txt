@@ -3,7 +3,7 @@ Flask-Bootstrap==3.3.7.1
 Jinja2==2.7.3
 MarkupSafe==0.23
 MySQL-python==1.2.3
-Pillow==2.6.1
+Pillow==8.3.2
 PyJWT==1.7.1
 RPi.GPIO==0.6.3
 RTIMULib==7.2.1
